@@ -40,7 +40,7 @@
       var timeOfDay = [
         "9 a.m.",
         "10 a.m.",
-        "11 a.m.",
+        "11 a.m",
         "12 p.m.",
         "1 p.m.",
         "2 p.m.",
@@ -48,6 +48,8 @@
         "4 p.m.",
         "5 p.m.",
       ];
+
+      function eventColor() {}
 
       $.each(timeOfDay, function (i) {
         var hour = timeOfDay[i];
@@ -57,8 +59,9 @@
         newDiv.text(hour);
 
         var newInput = $("<input>");
-        newInput.addClass("col-10 time-block");
+        newInput.addClass("col-10 time-block future");
         newInput.attr("id", [i] + "Input");
+        newInput.data("24h", parseInt([i]) + 9);
         newInput.attr("placeholder", "Enter event here");
 
         var newBtn = $("<button>");
@@ -74,6 +77,17 @@
       });
 
       for (i = 0; i < 8; i++) {
+        var currentHour = moment().format("H");
+        var timeBlock = $("#" + [i] + "Input");
+        var timeBlockT = timeBlock.data("24h");
+        if (timeBlockT == currentHour) {
+          timeBlock.toggleClass("future present");
+        } else if (timeBlockT < currentHour) {
+          timeBlock.toggleClass("future past");
+        }
+      }
+
+      for (i = 0; i < 9; i++) {
         var storedEvent = localStorage.getItem([i] + "box");
         if (!storedEvent) {
           continue;
@@ -82,14 +96,12 @@
         }
       }
 
-      $(".saveBtn").on("click", function (event) {
+      $(".saveBtn").on("click", function () {
         var btnId = $(this).attr("id");
         var IDNum = btnId.charAt(0);
         var matchingInput = $("#" + IDNum + "Input").val();
         localStorage.setItem(IDNum + "box", matchingInput);
       });
     </script>
-
-    <!-- j -->
   </body>
 </html>
