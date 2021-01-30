@@ -28,6 +28,7 @@
       <p class="lead">A simple calendar app for scheduling your work day</p>
       <p id="currentDay" class="lead"></p>
     </header>
+
     <div class="container"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -70,6 +71,22 @@
         newRow.append(newDiv, newInput, newBtn);
 
         $(".container").append(newRow);
+      });
+
+      for (i = 0; i < 8; i++) {
+        var storedEvent = localStorage.getItem([i] + "box");
+        if (!storedEvent) {
+          continue;
+        } else {
+          $("#" + [i] + "Input").val(storedEvent);
+        }
+      }
+
+      $(".saveBtn").on("click", function (event) {
+        var btnId = $(this).attr("id");
+        var IDNum = btnId.charAt(0);
+        var matchingInput = $("#" + IDNum + "Input").val();
+        localStorage.setItem(IDNum + "box", matchingInput);
       });
     </script>
 
