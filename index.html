@@ -26,7 +26,10 @@
     <header class="jumbotron">
       <h1 class="display-3">Work Day Scheduler</h1>
       <p class="lead">A simple calendar app for scheduling your work day</p>
-      <p id="currentDay" class="lead"></p>
+      <p class="lead">
+        Today is:
+        <span id="currentDay"> </span>
+      </p>
     </header>
 
     <div class="container"></div>
@@ -35,8 +38,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 
     <script type="text/javascript">
-      $("#currentDay").text(moment().format("MMMM Do YYYY, h:mm:ss a"));
+      //update current date and time when loading page
+      $("#currentDay").html(moment().format("MMMM Do YYYY, h:mm:ss a"));
 
+      // array of times to iterate through and create time blocks
       var timeOfDay = [
         "9 a.m.",
         "10 a.m.",
@@ -49,33 +54,39 @@
         "5 p.m.",
       ];
 
-      function eventColor() {}
-
+      // loop through the timeOfDay array and
       $.each(timeOfDay, function (i) {
+        // set hour to current value of the array
         var hour = timeOfDay[i];
 
+        // make a new div with the time label
         var newDiv = $("<div>");
         newDiv.addClass("col-1 hour");
         newDiv.text(hour);
 
+        // make an input field for the user to save events, will be the part that changes color later. here we assign the future class by default to change later. we give each input an ordered ID number, as well as a data attribute of its 24hr format
         var newInput = $("<input>");
         newInput.addClass("col-10 time-block future");
         newInput.attr("id", [i] + "Input");
         newInput.data("24h", parseInt([i]) + 9);
         newInput.attr("placeholder", "Enter event here");
 
+        // make save buttons for all these inputs. these save buttons have correlated ID numbers with the inputs above
         var newBtn = $("<button>");
         newBtn.addClass("col-1 saveBtn");
         newBtn.attr("id", [i] + "Save");
         newBtn.text("Save");
 
+        // make a new row and append the div, input, and button to it
         var newRow = $("<div>");
         newRow.addClass("row");
         newRow.append(newDiv, newInput, newBtn);
 
+        // then slap it all in the container
         $(".container").append(newRow);
       });
 
+      // this for loop assesses the time of each input field in 24hr format, then assigns each input a class based on its 24hr data and the current time
       for (i = 0; i < 8; i++) {
         var currentHour = moment().format("H");
         var timeBlock = $("#" + [i] + "Input");
@@ -87,6 +98,7 @@
         }
       }
 
+      // this loop searches the local storage for ID numbers as keys and puts the values back into the matching input fields
       for (i = 0; i < 9; i++) {
         var storedEvent = localStorage.getItem([i] + "box");
         if (!storedEvent) {
@@ -96,6 +108,7 @@
         }
       }
 
+      // this event listener listens for clicks on save buttons. it grabs the button ID number, matches it to an input ID number, then saves it to local storage with the same ID number.
       $(".saveBtn").on("click", function () {
         var btnId = $(this).attr("id");
         var IDNum = btnId.charAt(0);
