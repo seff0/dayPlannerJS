@@ -87,7 +87,7 @@
       });
 
       // this for loop assesses the time of each input field in 24hr format, then assigns each input a class based on its 24hr data and the current time
-      for (i = 0; i < 8; i++) {
+      for (i = 0; i < 9; i++) {
         var currentHour = moment().format("H");
         var timeBlock = $("#" + [i] + "Input");
         var timeBlockT = timeBlock.data("24h");
